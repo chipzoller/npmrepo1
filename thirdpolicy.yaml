@@ -1,0 +1,47 @@
+apiVersion: kyverno.io/v1
+kind: Policy
+metadata:
+  name: thirdpolicyfirst
+  namespace: production
+spec:
+  validationFailureAction: enforce
+  rules:
+  - name: third-ruleone
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "message one"
+      pattern:
+        spec:
+          containers:
+          - resources:
+              limits:
+                memory: "<=1Gi"
+                cpu: "<=200m"
+---
+apiVersion: kyverno.io/v1
+kind: Policy
+metadata:
+  name: thirdpolicysecond
+  namespace: production
+spec:
+  validationFailureAction: enforce
+  rules:
+  - name: third-ruletwo
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "message two."
+      pattern:
+        spec:
+          containers:
+          - resources:
+              limits:
+                memory: "<=1Gi"
+                cpu: "<=200m"
