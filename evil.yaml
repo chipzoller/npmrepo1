@@ -1,0 +1,26 @@
+apiVersion: kyverno.io/v1
+kind: Policy
+metadata:
+  name: evil-policy-match-foreign-pods
+  namespace: production
+spec:
+  validationFailureAction: enforce
+  background: false
+  rules:
+    - name: evil-validation
+      match:
+        resources:
+          kinds:
+            - Pod
+      preconditions:
+        all:
+          - key: "{{request.operation}}"
+            operator: Equals
+            value: CREATE
+      validate:
+        message: >-
+          Mua ah ah ... you've been pwned by customer-foo
+        pattern:
+          metadata:
+            annotations: 
+              pwned-by-customer-foo: "true"
