@@ -1,0 +1,23 @@
+apiVersion: kyverno.io/v1
+kind: Policy
+metadata:
+  name: nextpolicy
+  namespace: production
+spec:
+  validationFailureAction: enforce
+  rules:
+  - name: nextrule
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "Here's a message."
+      pattern:
+        spec:
+          containers:
+          - resources:
+              limits:
+                memory: "<=1Gi"
+                cpu: "<=200m"
